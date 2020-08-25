@@ -5,21 +5,26 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.openqa.selenium.WebDriver;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.training.generics.ScreenShot;
+import com.training.pom.ChangePwdPOM;
 import com.training.pom.LoginPOM;
 import com.training.utility.DriverFactory;
 import com.training.utility.DriverNames;
 
-public class LoginTests {
+// This is for Simple TC01 (RTTC_007)
+
+public class ChangePassword {
 
 	private WebDriver driver;
 	private String baseUrl;
 	private LoginPOM loginPOM;
+	private ChangePwdPOM changePwdPOM;
 	private static Properties properties;
 	private ScreenShot screenShot;
 
@@ -33,7 +38,8 @@ public class LoginTests {
 	@BeforeMethod
 	public void setUp() throws Exception {
 		driver = DriverFactory.getDriver(DriverNames.CHROME);
-		loginPOM = new LoginPOM(driver); 
+		loginPOM = new LoginPOM(driver);
+		changePwdPOM = new ChangePwdPOM(driver); 
 		baseUrl = properties.getProperty("baseURL");
 		screenShot = new ScreenShot(driver); 
 		// open the browser 
@@ -45,11 +51,20 @@ public class LoginTests {
 		Thread.sleep(1000);
 		driver.quit();
 	}
+
 	@Test
-	public void validLoginTest() {
+	public void validateChangePwdTest() {
+		
 		loginPOM.sendUserName("darshan@gmail.com");
 		loginPOM.sendPassword("admin123");
 		loginPOM.clickLoginBtn(); 
-		screenShot.captureScreenShot("First");
+		changePwdPOM.clickChangePwd();
+		changePwdPOM.sendPassword("manzoor");
+		changePwdPOM.sendConfirmPassword("mehadi");
+		changePwdPOM.clickContinueBtn();
+		String aMessage=changePwdPOM.readMsg();
+		String eMessage="Password confirmation does not match password!";
+		Assert.assertEquals(aMessage, eMessage);
+		screenShot.captureScreenShot("Simple_TC01");
 	}
 }
