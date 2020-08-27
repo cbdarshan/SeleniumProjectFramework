@@ -14,16 +14,16 @@ import org.testng.annotations.Test;
 import com.training.generics.ScreenShot;
 import com.training.pom.DelReturnedPrdDetailsPOM;
 import com.training.pom.LoginPOM;
+import com.training.pom.TestCase04POM;
+import com.training.pom.TestCase05POM;
 import com.training.utility.DriverFactory;
 import com.training.utility.DriverNames;
 
-//This is for Simple TC03 (RTTC_019)
-  
-public class DelReturnedPrdDetailsTests {
+public class TestCase05Tests {
 	
 	private WebDriver driver;
 	private String adminUrl;
-	private DelReturnedPrdDetailsPOM delReturnedPrdDetailsPOM;
+	private TestCase05POM testCase05POM;
 	private static Properties properties;
 	private ScreenShot screenShot;
 
@@ -37,7 +37,7 @@ public class DelReturnedPrdDetailsTests {
 	@BeforeMethod
 	public void setUp() throws Exception {
 		driver = DriverFactory.getDriver(DriverNames.CHROME);
-		delReturnedPrdDetailsPOM = new DelReturnedPrdDetailsPOM(driver); 
+		testCase05POM = new TestCase05POM(driver); 
 		adminUrl = properties.getProperty("adminURL");
 		screenShot = new ScreenShot(driver); 
 		// open the browser 
@@ -51,16 +51,20 @@ public class DelReturnedPrdDetailsTests {
 	}
 	
   @Test
-  public void validateAdminAccess() {
-	  delReturnedPrdDetailsPOM.sendUserName("admin");
-	  delReturnedPrdDetailsPOM.sendPassword("admin@123");
-	  delReturnedPrdDetailsPOM.clickLoginBtn();
-	  delReturnedPrdDetailsPOM.navigateReturns();
-	  delReturnedPrdDetailsPOM.deleteProduct();
-	  String aResult=delReturnedPrdDetailsPOM.readMessage();
-	  String eResult="Success: You have modified returns!\n" + 
+  public void addcategory() {
+	  testCase05POM.sendUserName("admin");
+	  testCase05POM.sendPassword("admin@123");
+	  testCase05POM.clickLoginBtn();
+	  boolean aCatelog=testCase05POM.checkCatelogLinks();
+	  boolean ecatelog=true;
+	  Assert.assertEquals(aCatelog, ecatelog);
+	  boolean aCategory=testCase05POM.checkCategoryOptions();
+	  boolean eCategory=true;
+	  Assert.assertEquals(aCategory, eCategory);
+	  String aMessage=testCase05POM.addCategory("ORNAMENTS", "ornaments for ladies", "ORNAMENTS", "ornaments for ladies");
+	  String eMessage="Success: You have modified categories!\n" + 
 	  		"×";
-	  Assert.assertEquals(aResult, eResult);
-	  screenShot.captureScreenShot("Simple_TC03");
+	  Assert.assertEquals(aMessage, eMessage);
+	  screenShot.captureScreenShot("Medium_TC02");
   }
 }
